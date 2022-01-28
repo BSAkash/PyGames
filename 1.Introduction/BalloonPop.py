@@ -45,6 +45,7 @@ def resetBalloon():
 
 
 # Main loop
+wait_for_frames = 10
 start = True
 while start:
     # Get Events
@@ -67,6 +68,16 @@ while start:
     else:
         # OpenCV
         success, img = cap.read()
+
+        # Wait for cam to open and send frames
+        if not success:
+            if wait_for_frames == 0:
+                print('Unable to receive any frames. Please check your camera')
+                start = False
+                break
+            wait_for_frames -= 1
+            continue
+
         img = cv2.flip(img, 1)
         hands, img = detector.findHands(img, flipType=False)
 
